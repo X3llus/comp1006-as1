@@ -22,6 +22,8 @@
     $restaurants = $cmd->fetchAll();
     $resArray = [];
 
+    $db = null;
+
     foreach ($restaurants as $res) {
       array_push($resArray, $res["id"]);
     }
@@ -47,6 +49,26 @@
     if(empty($review)) {
       echo "You must leave a review <br />";
       $valid = false;
+    }
+
+    if ($valid) {
+      // Connect to my database
+      $db = new PDO('mysql:host=172.31.22.43;dbname=Braden_W1095701', 'Braden_W1095701', 'P8TwvNsomx');
+
+      // Make sql command to get our data
+      $insert = "INSERT INTO Reviews (restaurant_id, rating, review) VALUES (:restaurant, :rating, :review);";
+      $cmd = $db->prepare($insert);
+
+      $cmd->bindParam(':restaurant', $restaurant, PDO::PARAM_INT);
+      $cmd->bindParam(':rating', $rating, PDO::PARAM_INT);
+      $cmd->bindParam(':review', $review, PDO::PARAM_STR);
+
+      $cmd->execute();
+
+      $db = null;
+
+      echo '<h2 class="alert alert-success">Review Posted</h2>';
+      header('location:index.php');
     }
 
     ?>
