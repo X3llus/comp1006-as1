@@ -4,21 +4,31 @@
     <meta charset="utf-8">
     <title>Restaurant Review</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300|Open+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="master.css">
   </head>
   <body>
+
+    <header>
+      <h1>Restaurant Reviews</h1>
+      <a href="newRestaurant.php">Wanna leave a review?</a>
+    </header>
 
     <table class="table table-striped table-hover">
       <thead><th>Restaurants</th><th>Rating</th><th>Review</th></thead>
       <?php
 
+      // Connect to my database
       $db = new PDO('mysql:host=172.31.22.43;dbname=Braden_W1095701', 'Braden_W1095701', 'P8TwvNsomx');
 
+      // Make sql command to get our data
       $select = "SELECT res.Restaurant as Restaurant, rev.rating as Rating, rev.review as Review FROM Reviews rev, Restaurants res WHERE rev.restaurant_id = res.id;";
       $cmd = $db->prepare($select);
       $cmd->execute();
 
       $reviews = $cmd->fetchAll();
 
+      // Build out the table rows with the data
       foreach ($reviews as $review) {
         echo "<tr><td>" . $review["Restaurant"] . "</td><td>" . $review["Rating"] . "</td><td>" . $review["Review"] . "</td></tr>";
       }
